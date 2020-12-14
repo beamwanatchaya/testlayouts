@@ -8,17 +8,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    //Step 2
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
       child: Row(
         children: [
           Expanded(
-            /*1*/
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*2*/
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
@@ -37,18 +34,18 @@ class MyApp extends StatelessWidget {
               ],
             ),
           ),
-          /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
-          ),
-          Text('41'),
+          //Icon(
+            FavoriteWidget(),
+            //Icons.star,
+            //color: Colors.red[500],
+            //),
+            //Text('41'),
         ],
       ),
     );
-//Step 3.2
-    Color color = Theme.of(context).primaryColor;
+    ///////////////////*end Implement the title row
 
+    Color color = Theme.of(context).primaryColor;
     Widget buttonSection = Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,113 +56,108 @@ class MyApp extends StatelessWidget {
         ],
       ),
     );
-//Step 4.1
-    Widget textSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Text(
-        'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
+
+    return MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('Flutter layout demo'),
+    ),
+          body: ListView(
+            children: [
+            Image.asset(
+            'images/lake.jpg',
+              width: 600,
+              height: 240,
+              fit: BoxFit.cover,
+            ),
+              titleSection,
+              buttonSection,
+              textSection,
+            ],
+          ),
+        ),
+    );
+  }
+}
+
+Column _buildButtonColumn(Color color, IconData icon, String label) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(icon, color: color),
+      Container(
+        margin: const EdgeInsets.only(top: 8),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: color,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget textSection = Container(
+  padding: const EdgeInsets.all(32),
+  child: Text(
+    'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
         'Alps. Situated 1,578 meters above sea level, it is one of the '
         'larger Alpine Lakes. A gondola ride from Kandersteg, followed by a '
         'half-hour walk through pastures and pine forest, leads you to the '
         'lake, which warms to 20 degrees Celsius in the summer. Activities '
         'enjoyed here include rowing, and riding the summer toboggan run.',
-        softWrap: true,
-      ),
-    );
+    softWrap: true,
+  ),
+);
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Flutter layout demo'),
-        ),
-        //Step 2/1
-        body: ListView(
-          //Step4เปลี่ยน Column body
-          children: [
-            Image.asset(
-              'images/lake.jpg',
-              width: 600,
-              height: 240,
-              fit: BoxFit.cover,
-            ),
-            titleSection,
-            buttonSection, //Step 3.3
-            textSection,
-          ],
-        ),
-      ),
-    );
-  }
-
-//Step 3.1
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
+class FavoriteWidget extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _FavoriteWidgetState createState() => _FavoriteWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _FavoriteWidgetState extends State<FavoriteWidget> {
+  bool _isFavorited = true;
+  int _favoriteCount = 41;
 
-  void _incrementCounter() {
+  void _toggleFavorite() {
     setState(() {
-      _counter++;
+      if (_isFavorited) {
+        _favoriteCount -= 1;
+        _isFavorited = false;
+      } else {
+        _favoriteCount += 1;
+        _isFavorited = true;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.all(0),
+            child: IconButton(
+              padding: EdgeInsets.all(0),
+              alignment: Alignment.centerRight,
+              icon: (_isFavorited ? Icon(Icons.star) : Icon(Icons.star_border)),
+              color: Colors.red[500],
+              onPressed: _toggleFavorite,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+          ),
+          SizedBox(
+            width: 18,
+            child: Container(
+              child: Text('$_favoriteCount'),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+          ),
+        ],
+      );
+    }
 }
+
